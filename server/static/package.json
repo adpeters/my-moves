@@ -1,0 +1,19 @@
+{
+  "name": "movescount2",
+  "version": "0.1.0",
+  "description": "Dashboard for viewing and analyzing Movescount activities",
+  "main": "./dist/bundle.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Alec Peters",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^15.2.1",
+    "react-dom": "^15.2.1"
+  },
+  "devDependencies": {
+    "source-map-loader": "^0.1.5",
+    "ts-loader": "^0.8.2"
+  }
+}
