@@ -45,7 +45,7 @@ export class MoveListItem extends React.Component<MoveProps, {}> {
     };
 
     render() {
-        return <li>{this.props.move.MoveID}</li>;
+        return <li>{this.props.move.StartDate.toLocaleString()}: {this.props.move.MoveID}</li>;
     }
 }
 
@@ -66,7 +66,7 @@ export class MoveList extends React.Component<AppProps, IMoveListState> {
 
     render() {
         var moveList = this.state.data.map((value: IMove, index: number, array: IMove[]) => {
-            // console.log(value);
+            value.StartDate = new Date(value.StartTime);
             return (
                 <MoveListItem move={value} key={index} />
             );
@@ -74,12 +74,9 @@ export class MoveList extends React.Component<AppProps, IMoveListState> {
         // <h1>Hello from {this.props.compiler} and {this.props.framework}!</h1>
 
         return (
-            <div>
-                <ul>
-                    {moveList}
-                </ul>
-                <a href="/api/moves">Test Link</a>
-            </div>
+            <ul>
+                {moveList}
+            </ul>
         );
     };
 

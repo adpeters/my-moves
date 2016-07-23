@@ -81,7 +81,7 @@
 	    }
 	    ;
 	    MoveListItem.prototype.render = function () {
-	        return React.createElement("li", null, this.props.move.MoveID);
+	        return React.createElement("li", null, this.props.move.StartDate.toLocaleString(), ": ", this.props.move.MoveID);
 	    };
 	    return MoveListItem;
 	}(React.Component));
@@ -100,11 +100,11 @@
 	    };
 	    MoveList.prototype.render = function () {
 	        var moveList = this.state.data.map(function (value, index, array) {
-	            // console.log(value);
+	            value.StartDate = new Date(value.StartTime);
 	            return (React.createElement(MoveListItem, {move: value, key: index}));
 	        });
 	        // <h1>Hello from {this.props.compiler} and {this.props.framework}!</h1>
-	        return (React.createElement("div", null, React.createElement("ul", null, moveList), React.createElement("a", {href: "/api/moves"}, "Test Link")));
+	        return (React.createElement("ul", null, moveList));
 	    };
 	    ;
 	    MoveList.prototype.loadMovesFromServer = function () {
