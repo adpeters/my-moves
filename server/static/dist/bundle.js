@@ -67,6 +67,7 @@
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/// <reference path="./interfaces.ts" />
 	"use strict";
 	var __extends = (this && this.__extends) || function (d, b) {
 	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
