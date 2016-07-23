@@ -4,22 +4,13 @@ export interface AppProps { compiler: string; framework: string; }
 
 export interface MoveProps { moveID: string; }
 
-export interface IMoveListItemState {
-  moveID : string
-}
-
 export interface IMoveListState {
     data: string[]
 }
 
 export class MoveListItem extends React.Component<MoveProps, {}> {
-    // public state : IMoveListItemState;
-
     constructor(props : MoveProps) {
         super(props);
-        // this.state = {
-        //     moveID: ""
-        // };
     };
 
     render() {
@@ -37,9 +28,6 @@ export class MoveList extends React.Component<AppProps, IMoveListState> {
         this.state = {
             data: []
         };
-        // console.log(this.state);
-        // this.state = this.state.bind(this);
-        // this.state = Store.getState();
     };
 
     componentDidMount() {
@@ -48,9 +36,6 @@ export class MoveList extends React.Component<AppProps, IMoveListState> {
 
     render() {
         var moveList = this.state.data.map((value: string, index: number, array: string[]) => {
-            // console.log(index);
-            // console.log(value);
-            // console.log(array);
             return (
                 <MoveListItem moveID={value["MoveID"]} key={index} />
             );
@@ -76,7 +61,6 @@ export class MoveList extends React.Component<AppProps, IMoveListState> {
           if (request.status >= 200 && request.status < 400) {
             // Success!
             var data = JSON.parse(request.responseText);
-            // console.log(data);
             that.setState({ data: data});
           } else {
               console.log('Error getting moves!');
