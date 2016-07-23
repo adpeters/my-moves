@@ -129,25 +129,15 @@
 	    __extends(MoveListItem, _super);
 	    function MoveListItem(props) {
 	        _super.call(this, props);
-	        this.state = {
-	            selected: false
-	        };
 	        this.handleClick = this.handleClick.bind(this);
 	    }
 	    ;
 	    MoveListItem.prototype.handleClick = function () {
-	        console.log('clicked ' + this.props.move.MoveID);
-	        if (!this.state.selected) {
-	            Events.ee.emitEvent('moveSelected', [this.props.move]);
-	        }
-	        else {
-	            Events.ee.emitEvent('moveSelected', [null]);
-	        }
-	        this.setState({ selected: !this.state.selected });
+	        this.props.setSelected(this.props.move);
 	    };
 	    MoveListItem.prototype.render = function () {
 	        var cls = "h4 moveListItem";
-	        cls += this.state.selected ? " selected" : "";
+	        cls += this.props.isSelected ? " selected" : "";
 	        return React.createElement("li", {className: cls, onClick: this.handleClick}, this.props.move.StartDate.toLocaleDateString(), " ", React.createElement("small", null, this.props.move.StartDate.toLocaleTimeString()));
 	    };
 	    return MoveListItem;
@@ -158,16 +148,26 @@
 	    function MoveList(props) {
 	        _super.call(this, props);
 	        this.state = {
-	            data: []
+	            data: [],
+	            selected: null
 	        };
+	        this.setSelected = this.setSelected.bind(this);
 	    }
 	    ;
+	    MoveList.prototype.setSelected = function (selectedMove) {
+	        var selMove = this.state.selected === selectedMove ? null : selectedMove;
+	        this.setState({ data: this.state.data, selected: selMove });
+	        Events.ee.emitEvent('moveSelected', [selMove]);
+	    };
 	    MoveList.prototype.componentDidMount = function () {
 	        this.loadMovesFromServer();
 	    };
 	    MoveList.prototype.render = function () {
+	        var _this = this;
+	        var curSelected = this.state.selected;
 	        var moveList = this.state.data.map(function (value, index, array) {
-	            return (React.createElement(MoveListItem, {move: value, key: index}));
+	            var selected = value === curSelected;
+	            return (React.createElement(MoveListItem, {move: value, isSelected: selected, setSelected: _this.setSelected, key: index}));
 	        });
 	        return (React.createElement("ul", {className: "list-unstyled"}, moveList));
 	    };
@@ -183,7 +183,7 @@
 	                for (var d in data) {
 	                    data[d].StartDate = new Date(data[d].StartTime);
 	                }
-	                that.setState({ data: data });
+	                that.setState({ data: data, selected: null });
 	            }
 	            else {
 	                console.log('Error getting moves!');
@@ -191,7 +191,6 @@
 	        };
 	        request.onerror = function () {
 	            console.log('connection error');
-	            // There was a connection error of some sort
 	        };
 	        request.send();
 	    };

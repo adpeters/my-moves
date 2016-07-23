@@ -3,28 +3,19 @@
 import * as React from "react";
 import * as Events from "../events.tsx";
 
-export class MoveListItem extends React.Component<IMoveProps, { selected: boolean }> {
-    constructor(props : IMoveProps) {
+export class MoveListItem extends React.Component<IMoveListItemProps, {}> {
+    constructor(props : IMoveListItemProps) {
         super(props);
-        this.state = {
-            selected: false
-        };
         this.handleClick = this.handleClick.bind(this);
     };
 
     handleClick() {
-        console.log('clicked ' + this.props.move.MoveID);
-        if (!this.state.selected) { 
-            Events.ee.emitEvent('moveSelected', [this.props.move]);
-        } else {
-            Events.ee.emitEvent('moveSelected', [null]);
-        }
-        this.setState({selected: !this.state.selected});
+        this.props.setSelected(this.props.move);
     }
 
     render() {
         var cls = "h4 moveListItem";
-        cls += this.state.selected ? " selected" : "";
+        cls += this.props.isSelected ? " selected" : "";
         return <li className={cls} onClick={this.handleClick}>{this.props.move.StartDate.toLocaleDateString()} <small>{this.props.move.StartDate.toLocaleTimeString()}</small></li>;
     }
 }
@@ -36,18 +27,28 @@ export class MoveList extends React.Component<{}, IMoveListState> {
     constructor(props) {
         super(props);
         this.state = {
-            data: []
+            data: [],
+            selected: null
         };
+        this.setSelected = this.setSelected.bind(this);
     };
+
+    setSelected(selectedMove: IMove) {
+        var selMove = this.state.selected === selectedMove ? null : selectedMove;
+        this.setState({ data: this.state.data, selected: selMove });
+        Events.ee.emitEvent('moveSelected', [selMove]);
+    }
 
     componentDidMount() {
         this.loadMovesFromServer();
     }
 
     render() {
+        var curSelected = this.state.selected;
         var moveList = this.state.data.map((value: IMove, index: number, array: IMove[]) => {
+            var selected = value === curSelected;
             return (
-                <MoveListItem move={value} key={index} />
+                <MoveListItem move={value} isSelected={selected} setSelected={this.setSelected} key={index} />
             );
         });
 
@@ -70,18 +71,15 @@ export class MoveList extends React.Component<{}, IMoveListState> {
             for (var d in data) {
                 data[d].StartDate = new Date(data[d].StartTime);
             }
-            that.setState({ data: data });
+            that.setState({ data: data, selected: null });
           } else {
               console.log('Error getting moves!');
-              // console.error(this.props.url, status, err.toString());
-            // We reached our target server, but it returned an error
-
+              // We reached our target server, but it returned an error
           }
         };
 
         request.onerror = function() {
             console.log('connection error');
-          // There was a connection error of some sort
         };
 
         request.send();

@@ -1,9 +1,10 @@
-interface IMoveProps { move: IMove; }
+interface IMoveListItemProps { move: IMove; setSelected: any; isSelected: boolean; }
 
 interface IMoveState { move: IMove; }
 
 interface IMoveListState {
     data: IMove[]
+    selected: IMove
 }
 
 interface IMove {
