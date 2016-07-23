@@ -9,7 +9,7 @@
     },
     "files": [
         "./typings/index.d.ts",
-        "./src/components/app.tsx",
+        "./src/components/movelist.tsx",
         "./src/index.tsx"
     ]
 }

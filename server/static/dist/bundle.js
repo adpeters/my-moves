@@ -47,8 +47,8 @@
 	"use strict";
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(2);
-	var app_1 = __webpack_require__(3);
-	ReactDOM.render(React.createElement(app_1.App, {compiler: "TypeScript", framework: "React"}), document.getElementById("app"));
+	var movelist_1 = __webpack_require__(3);
+	ReactDOM.render(React.createElement(movelist_1.MoveList, {compiler: "TypeScript", framework: "React"}), document.getElementById("movelist"));
 
 
 /***/ },
@@ -74,17 +74,73 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var React = __webpack_require__(1);
-	var App = (function (_super) {
-	    __extends(App, _super);
-	    function App() {
-	        _super.apply(this, arguments);
+	var MoveListItem = (function (_super) {
+	    __extends(MoveListItem, _super);
+	    // public state : IMoveListItemState;
+	    function MoveListItem(props) {
+	        _super.call(this, props);
+	        // this.state = {
+	        //     moveID: ""
+	        // };
 	    }
-	    App.prototype.render = function () {
-	        return React.createElement("h1", null, "Hello from ", this.props.compiler, " and ", this.props.framework, "!");
+	    ;
+	    MoveListItem.prototype.render = function () {
+	        console.log(this.props);
+	        return React.createElement("li", null, this.props.moveID);
 	    };
-	    return App;
+	    return MoveListItem;
 	}(React.Component));
-	exports.App = App;
+	exports.MoveListItem = MoveListItem;
+	var MoveList = (function (_super) {
+	    __extends(MoveList, _super);
+	    function MoveList(props) {
+	        _super.call(this, props);
+	        this.state = {
+	            data: []
+	        };
+	        // console.log(this.state);
+	        // this.state = this.state.bind(this);
+	        // this.state = Store.getState();
+	    }
+	    ;
+	    MoveList.prototype.componentDidMount = function () {
+	        this.loadMovesFromServer();
+	    };
+	    MoveList.prototype.render = function () {
+	        var moveList = this.state.data.map(function (value, index, array) {
+	            // console.log(index);
+	            // console.log(value);
+	            // console.log(array);
+	            return (React.createElement(MoveListItem, {moveID: value["MoveID"], key: index}));
+	        });
+	        return (React.createElement("div", null, React.createElement("h1", null, "Hello from ", this.props.compiler, " and ", this.props.framework, "!"), React.createElement("ul", null, moveList), React.createElement("a", {href: "/api/moves"}, "Test Link")));
+	    };
+	    ;
+	    MoveList.prototype.loadMovesFromServer = function () {
+	        var that = this;
+	        var request = new XMLHttpRequest();
+	        request.open('GET', '/api/moves', true);
+	        request.onload = function () {
+	            if (request.status >= 200 && request.status < 400) {
+	                // Success!
+	                var data = JSON.parse(request.responseText);
+	                // console.log(data);
+	                that.setState({ data: data });
+	            }
+	            else {
+	                console.log('Error getting moves!');
+	            }
+	        };
+	        request.onerror = function () {
+	            console.log('connection error');
+	            // There was a connection error of some sort
+	        };
+	        request.send();
+	    };
+	    ;
+	    return MoveList;
+	}(React.Component));
+	exports.MoveList = MoveList;
 
 
 /***/ }

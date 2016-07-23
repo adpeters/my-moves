@@ -8,6 +8,6 @@ import (
 
 func Init(e *echo.Echo) {
 	e.Pre(middleware.RemoveTrailingSlash())
-	e.Get("/api", mccontroller.GetAll)
+	e.Get("/api/moves", mccontroller.GetAll)
     e.File("/", "public/index.html")
 }

@@ -4,6 +4,7 @@ import (
     "fmt"
     "log"
 	"github.com/labstack/echo"
+    // "github.com/adpeters/movescount2/server/api/mcmodel"
 	"net/http"
     "gopkg.in/mgo.v2"
     "gopkg.in/mgo.v2/bson"
@@ -31,6 +32,7 @@ func GetAll(c echo.Context) error {
 
     retStr := ""
     for i, elem := range result {
+        // move := new(mcmodel.Move)
         if str, ok := elem["MoveID"].(string); ok {
             /* act on str */
             retStr += str
@@ -38,5 +40,5 @@ func GetAll(c echo.Context) error {
         fmt.Println(i, elem["MoveID"])
     }
 
-	return c.JSON(http.StatusOK, retStr)
+	return c.JSON(http.StatusOK, result)
 }
