@@ -45,7 +45,7 @@ export class MoveListItem extends React.Component<MoveProps, {}> {
     };
 
     render() {
-        return <li>{this.props.move.StartDate.toLocaleString()}: {this.props.move.MoveID}</li>;
+        return <li className="h4 moveListItem">{this.props.move.StartDate.toLocaleDateString()} <small>{this.props.move.StartDate.toLocaleTimeString()}</small></li>;
     }
 }
 
@@ -66,7 +66,7 @@ export class MoveList extends React.Component<AppProps, IMoveListState> {
 
     render() {
         var moveList = this.state.data.map((value: IMove, index: number, array: IMove[]) => {
-            value.StartDate = new Date(value.StartTime);
+            // value.StartDate = new Date(value.StartTime);
             return (
                 <MoveListItem move={value} key={index} />
             );
@@ -74,7 +74,7 @@ export class MoveList extends React.Component<AppProps, IMoveListState> {
         // <h1>Hello from {this.props.compiler} and {this.props.framework}!</h1>
 
         return (
-            <ul>
+            <ul className="list-unstyled col-lg-4 col-sm-8">
                 {moveList}
             </ul>
         );
@@ -89,6 +89,9 @@ export class MoveList extends React.Component<AppProps, IMoveListState> {
           if (request.status >= 200 && request.status < 400) {
             // Success!
             var data = JSON.parse(request.responseText) as IMove[];
+            for (var d in data) {
+                data[d].StartDate = new Date(data[d].StartTime);
+            }
             // var typedData : IMove = data as IMove;
             that.setState({ data: data });
           } else {

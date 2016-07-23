@@ -81,7 +81,7 @@
 	    }
 	    ;
 	    MoveListItem.prototype.render = function () {
-	        return React.createElement("li", null, this.props.move.StartDate.toLocaleString(), ": ", this.props.move.MoveID);
+	        return React.createElement("li", {className: "h4 moveListItem"}, this.props.move.StartDate.toLocaleDateString(), " ", React.createElement("small", null, this.props.move.StartDate.toLocaleTimeString()));
 	    };
 	    return MoveListItem;
 	}(React.Component));
@@ -100,11 +100,11 @@
 	    };
 	    MoveList.prototype.render = function () {
 	        var moveList = this.state.data.map(function (value, index, array) {
-	            value.StartDate = new Date(value.StartTime);
+	            // value.StartDate = new Date(value.StartTime);
 	            return (React.createElement(MoveListItem, {move: value, key: index}));
 	        });
 	        // <h1>Hello from {this.props.compiler} and {this.props.framework}!</h1>
-	        return (React.createElement("ul", null, moveList));
+	        return (React.createElement("ul", {className: "list-unstyled col-lg-4 col-sm-8"}, moveList));
 	    };
 	    ;
 	    MoveList.prototype.loadMovesFromServer = function () {
@@ -115,6 +115,9 @@
 	            if (request.status >= 200 && request.status < 400) {
 	                // Success!
 	                var data = JSON.parse(request.responseText);
+	                for (var d in data) {
+	                    data[d].StartDate = new Date(data[d].StartTime);
+	                }
 	                // var typedData : IMove = data as IMove;
 	                that.setState({ data: data });
 	            }

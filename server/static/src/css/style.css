@@ -1,0 +1,14 @@
+/* style.css */
+
+li.moveListItem
+{
+    border-radius: 10px;
+    background: #ebebeb;
+    padding: 5px;
+    border: 1px solid #ebebeb;
+}
+
+li.moveListItem:hover {
+    border: 1px solid #000;
+    cursor: pointer;
+}
