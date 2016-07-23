@@ -1,6 +1,6 @@
-interface AppProps { compiler: string; framework: string; }
+interface IMoveProps { move: IMove; }
 
-interface MoveProps { move: IMove; }
+interface IMoveState { move: IMove; }
 
 interface IMoveListState {
     data: IMove[]

@@ -11,7 +11,8 @@
   "dependencies": {
     "bootstrap": "^3.3.6",
     "react": "^15.2.1",
-    "react-dom": "^15.2.1"
+    "react-dom": "^15.2.1",
+    "wolfy87-eventemitter": "^5.1.0"
   },
   "devDependencies": {
     "source-map-loader": "^0.1.5",

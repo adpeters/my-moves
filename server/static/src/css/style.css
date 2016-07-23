@@ -1,9 +1,8 @@
 /* style.css */
 
-li.moveListItem
-{
+li.moveListItem {
     border-radius: 10px;
-    background: #ebebeb;
+    background-color: #ebebeb;
     padding: 5px;
     border: 1px solid #ebebeb;
 }
@@ -11,4 +10,16 @@ li.moveListItem
 li.moveListItem:hover {
     border: 1px solid #000;
     cursor: pointer;
+}
+
+li.moveListItem.selected {
+    background-color: #75bd75;
+}
+
+div#movelist {
+    border-right: 2px solid #ebebeb;
+}
+
+div#main {
+    border-top: 2px solid #ebebeb;
 }
