@@ -2,10 +2,41 @@ import * as React from "react";
 
 export interface AppProps { compiler: string; framework: string; }
 
-export interface MoveProps { moveID: string; }
+export interface MoveProps { move: IMove; }
 
 export interface IMoveListState {
-    data: string[]
+    data: IMove[]
+}
+
+export interface IMove {
+    ActivityID: string;
+    AltitudeHigh: number;
+    AltitudeLow: number;
+    Ascent: number;
+    CadenceAvg: number;
+    CadenceMax: number;
+    Calories: number;
+    Descent: number;
+    Distance: number;
+    Duration: number;
+    HrAvg: number;
+    HrMax: number;
+    HrMin: number;
+    HrZone: number;
+    Latitude: string;
+    Longitude: string;
+    MoveID: string;
+    Notes: string;
+    SpeedAvg: number;
+    SpeedMax: number;
+    StartTime: number;
+    StartDate: Date;
+    TempAvg: number;
+    TempMax: number;
+    TempMin: number;
+    TimeAscent: number;
+    TimeDescent: number;
+    TimeFlat: number;
 }
 
 export class MoveListItem extends React.Component<MoveProps, {}> {
@@ -14,8 +45,7 @@ export class MoveListItem extends React.Component<MoveProps, {}> {
     };
 
     render() {
-        console.log(this.props);
-        return <li>{this.props.moveID}</li>;
+        return <li>{this.props.move.MoveID}</li>;
     }
 }
 
@@ -35,15 +65,16 @@ export class MoveList extends React.Component<AppProps, IMoveListState> {
     }
 
     render() {
-        var moveList = this.state.data.map((value: string, index: number, array: string[]) => {
+        var moveList = this.state.data.map((value: IMove, index: number, array: IMove[]) => {
+            // console.log(value);
             return (
-                <MoveListItem moveID={value["MoveID"]} key={index} />
+                <MoveListItem move={value} key={index} />
             );
         });
+        // <h1>Hello from {this.props.compiler} and {this.props.framework}!</h1>
 
         return (
             <div>
-                <h1>Hello from {this.props.compiler} and {this.props.framework}!</h1>
                 <ul>
                     {moveList}
                 </ul>
@@ -60,8 +91,9 @@ export class MoveList extends React.Component<AppProps, IMoveListState> {
         request.onload = function() {
           if (request.status >= 200 && request.status < 400) {
             // Success!
-            var data = JSON.parse(request.responseText);
-            that.setState({ data: data});
+            var data = JSON.parse(request.responseText) as IMove[];
+            // var typedData : IMove = data as IMove;
+            that.setState({ data: data });
           } else {
               console.log('Error getting moves!');
               // console.error(this.props.url, status, err.toString());

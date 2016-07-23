@@ -76,17 +76,12 @@
 	var React = __webpack_require__(1);
 	var MoveListItem = (function (_super) {
 	    __extends(MoveListItem, _super);
-	    // public state : IMoveListItemState;
 	    function MoveListItem(props) {
 	        _super.call(this, props);
-	        // this.state = {
-	        //     moveID: ""
-	        // };
 	    }
 	    ;
 	    MoveListItem.prototype.render = function () {
-	        console.log(this.props);
-	        return React.createElement("li", null, this.props.moveID);
+	        return React.createElement("li", null, this.props.move.MoveID);
 	    };
 	    return MoveListItem;
 	}(React.Component));
@@ -98,9 +93,6 @@
 	        this.state = {
 	            data: []
 	        };
-	        // console.log(this.state);
-	        // this.state = this.state.bind(this);
-	        // this.state = Store.getState();
 	    }
 	    ;
 	    MoveList.prototype.componentDidMount = function () {
@@ -108,12 +100,11 @@
 	    };
 	    MoveList.prototype.render = function () {
 	        var moveList = this.state.data.map(function (value, index, array) {
-	            // console.log(index);
 	            // console.log(value);
-	            // console.log(array);
-	            return (React.createElement(MoveListItem, {moveID: value["MoveID"], key: index}));
+	            return (React.createElement(MoveListItem, {move: value, key: index}));
 	        });
-	        return (React.createElement("div", null, React.createElement("h1", null, "Hello from ", this.props.compiler, " and ", this.props.framework, "!"), React.createElement("ul", null, moveList), React.createElement("a", {href: "/api/moves"}, "Test Link")));
+	        // <h1>Hello from {this.props.compiler} and {this.props.framework}!</h1>
+	        return (React.createElement("div", null, React.createElement("ul", null, moveList), React.createElement("a", {href: "/api/moves"}, "Test Link")));
 	    };
 	    ;
 	    MoveList.prototype.loadMovesFromServer = function () {
@@ -124,7 +115,7 @@
 	            if (request.status >= 200 && request.status < 400) {
 	                // Success!
 	                var data = JSON.parse(request.responseText);
-	                // console.log(data);
+	                // var typedData : IMove = data as IMove;
 	                that.setState({ data: data });
 	            }
 	            else {
