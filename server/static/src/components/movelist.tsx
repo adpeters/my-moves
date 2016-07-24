@@ -85,7 +85,7 @@ export class MoveList extends React.Component<{}, IMoveListState> {
                 that.processMove(data[d]);
             }
             data.sort(function(a,b) {
-                return a.StartTime - b.StartTime;
+                return b.StartTime - a.StartTime;
             });
             that.setState({ data: data, selected: null });
           } else {
