@@ -10,6 +10,8 @@
     "files": [
         "./typings/index.d.ts",
         "./src/components/movelist.tsx",
+        "./src/components/movedetail.tsx",
+        "./src/components/mainpage.tsx",
         "./src/index.tsx"
     ]
 }

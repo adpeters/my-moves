@@ -16,7 +16,8 @@ export class MoveListItem extends React.Component<IMoveListItemProps, {}> {
     render() {
         var cls = "h4 moveListItem";
         cls += this.props.isSelected ? " selected" : "";
-        return <li className={cls} onClick={this.handleClick}>{this.props.move.StartDate.toLocaleDateString()} <small>{this.props.move.StartDate.toLocaleTimeString()}</small></li>;
+        return <li className={cls} onClick={this.handleClick}>{this.props.move.StartDate.toLocaleDateString()} <small>{this.props.move.StartDate.toLocaleTimeString()}</small>
+        <small style={{"float": "right"}}>{this.props.move.Distance.toFixed(2)} Mile {this.props.move.Activity}</small></li>;
     }
 }
 
@@ -59,6 +60,18 @@ export class MoveList extends React.Component<{}, IMoveListState> {
         );
     };
 
+    processMove(move: IMove) {
+        move.StartDate = new Date(move.StartTime);
+        if (move.ActivityID == "3") move.Activity = "Run";
+        else if (move.ActivityID == "4") move.Activity = "Bike";
+        else if (move.ActivityID == "11") move.Activity = "Hike";
+        else move.Activity = "Unknown";
+
+        move.Distance = move.Distance/1609.34;
+        move.SpeedAvg = move.SpeedAvg*2.23694;
+        move.SpeedMax = move.SpeedMax*2.23694;
+    }
+
     loadMovesFromServer() {
         var that = this;
         var request = new XMLHttpRequest();
@@ -69,8 +82,11 @@ export class MoveList extends React.Component<{}, IMoveListState> {
             // Success!
             var data = JSON.parse(request.responseText) as IMove[];
             for (var d in data) {
-                data[d].StartDate = new Date(data[d].StartTime);
+                that.processMove(data[d]);
             }
+            data.sort(function(a,b) {
+                return a.StartTime - b.StartTime;
+            });
             that.setState({ data: data, selected: null });
           } else {
               console.log('Error getting moves!');

@@ -9,6 +9,7 @@ interface IMoveListState {
 
 interface IMove {
     ActivityID: string;
+    Activity: string;
     AltitudeHigh: number;
     AltitudeLow: number;
     Ascent: number;

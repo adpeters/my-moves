@@ -138,7 +138,7 @@
 	    MoveListItem.prototype.render = function () {
 	        var cls = "h4 moveListItem";
 	        cls += this.props.isSelected ? " selected" : "";
-	        return React.createElement("li", {className: cls, onClick: this.handleClick}, this.props.move.StartDate.toLocaleDateString(), " ", React.createElement("small", null, this.props.move.StartDate.toLocaleTimeString()));
+	        return React.createElement("li", {className: cls, onClick: this.handleClick}, this.props.move.StartDate.toLocaleDateString(), " ", React.createElement("small", null, this.props.move.StartDate.toLocaleTimeString()), React.createElement("small", {style: { "float": "right" }}, this.props.move.Distance.toFixed(2), " Mile ", this.props.move.Activity));
 	    };
 	    return MoveListItem;
 	}(React.Component));
@@ -172,6 +172,20 @@
 	        return (React.createElement("ul", {className: "list-unstyled"}, moveList));
 	    };
 	    ;
+	    MoveList.prototype.processMove = function (move) {
+	        move.StartDate = new Date(move.StartTime);
+	        if (move.ActivityID == "3")
+	            move.Activity = "Run";
+	        else if (move.ActivityID == "4")
+	            move.Activity = "Bike";
+	        else if (move.ActivityID == "11")
+	            move.Activity = "Hike";
+	        else
+	            move.Activity = "Unknown";
+	        move.Distance = move.Distance / 1609.34;
+	        move.SpeedAvg = move.SpeedAvg * 2.23694;
+	        move.SpeedMax = move.SpeedMax * 2.23694;
+	    };
 	    MoveList.prototype.loadMovesFromServer = function () {
 	        var that = this;
 	        var request = new XMLHttpRequest();
@@ -181,8 +195,11 @@
 	                // Success!
 	                var data = JSON.parse(request.responseText);
 	                for (var d in data) {
-	                    data[d].StartDate = new Date(data[d].StartTime);
+	                    that.processMove(data[d]);
 	                }
+	                data.sort(function (a, b) {
+	                    return a.StartTime - b.StartTime;
+	                });
 	                that.setState({ data: data, selected: null });
 	            }
 	            else {
@@ -213,6 +230,7 @@
 	};
 	var React = __webpack_require__(1);
 	var Events = __webpack_require__(3);
+	var Utils = __webpack_require__(8);
 	var MoveDetail = (function (_super) {
 	    __extends(MoveDetail, _super);
 	    function MoveDetail(props) {
@@ -240,13 +258,30 @@
 	        }
 	        else {
 	            var divId = "move-" + this.state.move.MoveID;
-	            return (React.createElement("div", {id: divId}, React.createElement("h2", null, "Viewing Move ", this.state.move.MoveID)));
+	            var move = this.state.move;
+	            return (React.createElement("div", {id: divId}, React.createElement("h2", null, "Viewing Move ", this.state.move.MoveID), React.createElement("table", null, React.createElement("tbody", null, React.createElement("tr", null, React.createElement("th", null, "Start Date/Time"), React.createElement("td", null, move.StartDate.toLocaleDateString(), " ", React.createElement("small", null, move.StartDate.toLocaleTimeString()))), React.createElement("tr", null, React.createElement("th", null, "MoveID"), React.createElement("td", null, move.MoveID)), React.createElement("tr", null, React.createElement("th", null, "Activity"), React.createElement("td", null, move.Activity)), React.createElement("tr", null, React.createElement("th", null, "Duration"), React.createElement("td", null, Utils.getTimeString(move.Duration))), React.createElement("tr", null, React.createElement("th", null, "Distance (miles)"), React.createElement("td", null, (move.Distance).toFixed(2))), React.createElement("tr", null, React.createElement("th", null, "Ascent (ft)"), React.createElement("td", null, move.Ascent, " ", React.createElement("small", null, Utils.getTimeString(move.TimeAscent)))), React.createElement("tr", null, React.createElement("th", null, "Descent (ft)"), React.createElement("td", null, move.Descent, " ", React.createElement("small", null, Utils.getTimeString(move.TimeDescent)))), React.createElement("tr", null, React.createElement("th", null, "Average Speed (mph)"), React.createElement("td", null, (move.SpeedAvg).toFixed(2))), React.createElement("tr", null, React.createElement("th", null, "Max Speed (mph)"), React.createElement("td", null, (move.SpeedMax).toFixed(2))), React.createElement("tr", null, React.createElement("th", null, "Cadence"), React.createElement("td", null, move.CadenceAvg)), React.createElement("tr", null, React.createElement("th", null, "Calories"), React.createElement("td", null, move.Calories)), React.createElement("tr", null, React.createElement("th", null, "Average HR"), React.createElement("td", null, move.HrAvg)), React.createElement("tr", null, React.createElement("th", null, "Max HR"), React.createElement("td", null, move.HrMax))))));
 	        }
 	    };
 	    ;
 	    return MoveDetail;
 	}(React.Component));
 	exports.MoveDetail = MoveDetail;
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	//utils.tsx
+	"use strict";
+	//returns duration in form H:m:s from milliseconds integer
+	function getTimeString(time) {
+	    var durationStr = Math.floor(time / 1000 / 60 / 60) + ":";
+	    durationStr += Math.floor(time / 1000 / 60 % 60) + ":";
+	    durationStr += Math.floor(time / 1000 % 60);
+	    return durationStr;
+	}
+	exports.getTimeString = getTimeString;
 
 
 /***/ }
